@@ -54,9 +54,11 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task): TaskResource
     {
-        //
+        $task->number_of_likes = $task->number_of_likes + 1;
+        $task->save();
+        return new TaskResource ($task);
     }
 
     /**
