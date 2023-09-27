@@ -1,24 +1,49 @@
-import Image from 'next/image'
+"use client";
+import {useEffect, useState} from 'react';
 
-export default function Home() {
+export default function list() {
+
+    let [data, setData] = useState({});
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/tasks');
+                const data = await response.json();
+                setData(data);
+            } catch (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        }
+
+        fetchData().then();
+    }, []);
+
+
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
 
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div className="relative overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" className="px-6 py-3">
-                            Product name
+                            Titulo
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Color
+                            Descripción
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Category
+                            Fecha de creación
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Price
+                            Estado de la república
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Nombre del creador
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Número de likes
                         </th>
                         <th scope="col" className="px-6 py-3">
                             <span className="sr-only">Edit</span>
@@ -26,60 +51,47 @@ export default function Home() {
                     </tr>
                     </thead>
                     <tbody>
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Apple MacBook Pro 17"
-                        </th>
-                        <td className="px-6 py-4">
-                            Silver
-                        </td>
-                        <td className="px-6 py-4">
-                            Laptop
-                        </td>
-                        <td className="px-6 py-4">
-                            $2999
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Microsoft Surface Pro
-                        </th>
-                        <td className="px-6 py-4">
-                            White
-                        </td>
-                        <td className="px-6 py-4">
-                            Laptop PC
-                        </td>
-                        <td className="px-6 py-4">
-                            $1999
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            Magic Mouse 2
-                        </th>
-                        <td className="px-6 py-4">
-                            Black
-                        </td>
-                        <td className="px-6 py-4">
-                            Accessories
-                        </td>
-                        <td className="px-6 py-4">
-                            $99
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                            <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        </td>
-                    </tr>
+
+                    {data.data?.map((item, index) => (
+
+                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                            key={index}>
+                            <th scope="row"
+                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {item.title}
+                            </th>
+                            <td className="px-6 py-4">
+                                {item.description}
+                            </td>
+                            <td className="px-6 py-4">
+                                {item.created_at}
+                            </td>
+                            <td className="px-6 py-4">
+                                {item.state.abbreviation} {item.state.name}
+                            </td>
+                            <td className="px-6 py-4">
+                                {item.user.name}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                                {item.number_of_likes}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                                <button
+                                    className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                                      <span
+                                          className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                                                <i className="fa-regular fa-thumbs-up "></i>
+                                      </span>
+                                </button>
+
+                            </td>
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             </div>
+
+
 
         </main>
     )
