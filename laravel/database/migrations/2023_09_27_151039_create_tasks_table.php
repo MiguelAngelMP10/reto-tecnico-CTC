@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('state_id');
+            $table->unsignedBigInteger('user_id');
+            $table->integer('title');
+            $table->text('description');
+            $table->integer('number_of_likes')->default(0);
+
+            // Definir las relaciones si es necesario
+            $table->foreign('state_id')->references('id')->on('states');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
