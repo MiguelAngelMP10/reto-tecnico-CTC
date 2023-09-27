@@ -16,8 +16,8 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function state(): HasOne
+    public function state(): BelongsTo
     {
-        return $this->hasOne(State::class);
+        return $this->BelongsTo(State::class);
     }
 }
