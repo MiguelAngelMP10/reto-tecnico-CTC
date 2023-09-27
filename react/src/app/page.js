@@ -1,12 +1,13 @@
 "use client";
 import {useEffect, useState} from 'react';
 import {PacmanLoader} from "react-spinners";
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function list() {
 
     let [data, setData] = useState({});
     const [loading, setLoading] = useState(false)
-
     useEffect(() => {
         async function fetchData() {
             try {
@@ -46,6 +47,11 @@ export default function list() {
                 setTimeout(() => {
                     setLoading(false);
                 }, 2000);
+                toast.success("Your like was added!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    className: 'foo-bar'
+                });
+
                 setData({data: rowUpdate});
             })
             .catch((error) => {
@@ -60,6 +66,7 @@ export default function list() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <PacmanLoader color="#36d7b7" size={50} loading={loading}/>
+            <ToastContainer/>
             <div className="relative overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
