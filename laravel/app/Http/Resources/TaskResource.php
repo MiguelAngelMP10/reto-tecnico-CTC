@@ -19,12 +19,13 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'created_at' =>  Carbon::parse($this->created_at)->format('d-m-Y H:i:s'),
+            'created_at' => Carbon::parse($this->created_at)->format('d-m-Y H:i:s'),
             'number_of_likes' => $this->number_of_likes,
             'user_id' => $this->user_id,
             'user' => new UserResource($this->user),
             'state_id' => $this->state_id,
-            'state' => new StateResource($this->state)
+            'state' => new StateResource($this->state),
+            'disabled' => false
         ];
     }
 }

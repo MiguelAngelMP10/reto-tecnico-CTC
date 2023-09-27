@@ -1,15 +1,21 @@
 "use client";
 import {useEffect, useState} from 'react';
+import {PacmanLoader} from "react-spinners";
 
 export default function list() {
 
     let [data, setData] = useState({});
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         async function fetchData() {
             try {
+                setLoading(true);
                 const response = await fetch('http://127.0.0.1:8000/api/tasks');
                 const data = await response.json();
+                setTimeout(() => {
+                    setLoading(false);
+                }, 2000);
                 setData(data);
             } catch (error) {
                 console.error('Error al obtener los datos:', error);
@@ -20,20 +26,40 @@ export default function list() {
     }, []);
 
     function handleClick(id) {
+        setLoading(true);
 
-        const rowUpdate = data?.data?.map((item) => {
-            if (item.id === id) {
-                return {...item, number_of_likes: item.number_of_likes + 1};
-            }
-            return item;
-        });
+        fetch(`http://127.0.0.1:8000/api/tasks/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((dataResponse) => {
 
-        setData({data: rowUpdate});
+                const rowUpdate = data?.data?.map((item) => {
+                    if (item.id === id) {
+                        return {...dataResponse.data, disabled: true};
+                    }
+                    return item;
+                });
+                setTimeout(() => {
+                    setLoading(false);
+                }, 2000);
+                setData({data: rowUpdate});
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 2000);
+            });
+
     }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-
+            <PacmanLoader color="#36d7b7" size={50} loading={loading}/>
             <div className="relative overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -87,14 +113,14 @@ export default function list() {
                                 {item.number_of_likes}
                             </td>
                             <td className="px-6 py-4 text-right">
+
                                 <button
                                     onClick={() => handleClick(item.id)}
+                                    disabled={item.disabled}
+                                    type="button"
+                                    className={item.disabled ? 'text-white bg-blue-100 dark:bg-blue-200  font-medium rounded-lg text-sm px-5 py-2.5 text-center cursor-not-allowed ' : 'text-white bg-blue-400 dark:bg-blue-500  font-medium rounded-lg text-sm px-5 py-2.5 text-center '}
 
-                                    className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                                      <span
-                                          className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                                             <i className="fa-regular fa-thumbs-up "></i>
-                                      </span>
+                                ><i className="fa-regular fa-thumbs-up fa-2x"></i>
                                 </button>
 
                             </td>
