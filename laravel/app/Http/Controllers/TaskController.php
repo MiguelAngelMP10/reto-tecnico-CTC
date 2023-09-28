@@ -8,15 +8,32 @@ use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): TaskCollection
+    public function index(Request $request): TaskCollection
     {
-        return new TaskCollection(Task::all());
+        if ($request->has('filter')) {
+
+            $query = Task::query();
+
+            if (isset($request->input('filter')['title'])) {
+                $query->where('title', 'like', '%' . $request->input('filter')['title'] . '%');
+            }
+
+            if (isset($request->input('filter')['state'])) {
+                $states = explode(',', $request->input('filter')['state']);
+                $query->orWhereIn('state_id', $states);
+            }
+
+            return new TaskCollection($query->get());
+        } else {
+            return new TaskCollection(Task::all());
+        }
     }
 
     /**
