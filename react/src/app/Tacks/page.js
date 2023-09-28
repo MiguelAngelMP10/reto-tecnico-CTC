@@ -65,6 +65,46 @@ export default function Index() {
 
     }
 
+    const deleteRow = (id) => {
+        if (confirm("Are you sure about deleting the task?")) {
+            fetch(`http://127.0.0.1:8000/api/tasks/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => response.json())
+                .then((dataResponse) => {
+
+                    toast.success(dataResponse.message, {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                        className: 'foo-bar'
+                    });
+
+
+                    const newData = data?.data?.filter((item) => {
+                        if (item.id !== id) {
+                            return item;
+                        }
+                    });
+                    setTimeout(() => {
+                        setLoading(false);
+                    }, 2000);
+
+                    console.log(newData);
+
+                    setData({data: newData});
+                })
+                .catch((error) => {
+                    toast.error(error.message, {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                        className: 'foo-bar'
+                    });
+                });
+        }
+    }
+
+
     return (
         <>
             <Menu></Menu>
@@ -103,8 +143,8 @@ export default function Index() {
                             <th scope="col" className="px-6 py-3">
                                 Número de likes
                             </th>
-                            <th scope="col" className="px-6 py-3">
-                                <span className="sr-only">Edit</span>
+                            <th scope="col" className="px-6 py-3" colSpan={2}>
+                                Acciones
                             </th>
                         </tr>
                         </thead>
@@ -116,7 +156,7 @@ export default function Index() {
                                 key={index}>
                                 <th scope="row"
                                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {item.title}
+                                    {item.id} {item.title}
                                 </th>
                                 <td className="px-6 py-4">
                                     {item.description}
@@ -133,8 +173,7 @@ export default function Index() {
                                 <td className="px-6 py-4 text-center">
                                     {item.number_of_likes}
                                 </td>
-                                <td className="px-6 py-4 text-right">
-
+                                <td className="px-6 py-4 text-center">
                                     <button
                                         onClick={() => handleClick(item.id)}
                                         disabled={item.disabled}
@@ -143,6 +182,17 @@ export default function Index() {
 
                                     ><i className="fa-regular fa-thumbs-up fa-2x"></i>
                                     </button>
+                                </td>
+                                <td className="px-6 py-4 text-center">
+                                    {item.number_of_likes === 0 ?
+                                        <button
+                                            onClick={() => deleteRow(item.id)}
+                                            type="button"
+                                            className='text-white bg-red-400 dark:bg-red-500  font-medium rounded-lg text-sm px-5 py-2.5 text-center '
+
+                                        ><i className="fa-solid fa-trash fa-2x"></i>
+                                        </button> : 'It cannot be deleted because it has likes'
+                                    }
 
                                 </td>
                             </tr>
