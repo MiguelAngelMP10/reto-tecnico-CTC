@@ -40,9 +40,9 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show(Task $task): TaskResource
     {
-        //
+        return new TaskResource ($task);
     }
 
 
@@ -51,7 +51,11 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task): TaskResource
     {
-        $task->number_of_likes = $task->number_of_likes + 1;
+        if ($request->has('number_of_likes')) {
+            $task->number_of_likes = $request->input('number_of_likes');
+        } else {
+            $task->number_of_likes = $task->number_of_likes + 1;
+        }
         $task->save();
         return new TaskResource ($task);
     }
