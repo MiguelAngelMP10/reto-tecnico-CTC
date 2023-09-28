@@ -143,7 +143,7 @@ export default function Index() {
                             <th scope="col" className="px-6 py-3">
                                 Número de likes
                             </th>
-                            <th scope="col" className="px-6 py-3" colSpan={2}>
+                            <th scope="col" className="px-6 py-3 text-center" colSpan={3}>
                                 Acciones
                             </th>
                         </tr>
@@ -193,6 +193,15 @@ export default function Index() {
                                         ><i className="fa-solid fa-trash fa-2x"></i>
                                         </button> : 'It cannot be deleted because it has likes'
                                     }
+
+                                </td>
+                                <td className="px-6 py-4 text-center">
+
+                                    <Link
+                                        className="my-5 text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm p-4  dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                                        href={`/Tacks/EditTack/${item.id}`}>
+                                        <i className="fa-solid fa-edit fa-2x"></i>
+                                    </Link>
 
                                 </td>
                             </tr>
