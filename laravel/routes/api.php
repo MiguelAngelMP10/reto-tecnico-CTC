@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('tasks', \App\Http\Controllers\TaskController::class);
 Route::resource('users', \App\Http\Controllers\UserController::class)->only('index');
-Route::resource('state', \App\Http\Controllers\StateController::class)->only('index');
+Route::resource('states', \App\Http\Controllers\StateController::class)->only('index');

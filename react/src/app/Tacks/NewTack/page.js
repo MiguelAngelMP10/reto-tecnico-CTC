@@ -1,5 +1,5 @@
 "use client";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Menu from "@/app/components/Menu";
 
 function NewTack() {
@@ -7,6 +7,34 @@ function NewTack() {
         title: '',
         description: '',
     });
+    const [states, setStates] = useState({})
+    const [users, setUsers] = useState({})
+
+    useEffect(() => {
+        async function getStates() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/states');
+                const data = await response.json();
+                setStates(data);
+            } catch (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        }
+
+
+        async function getUsers() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/users');
+                const data = await response.json();
+                setUsers(data);
+            } catch (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        }
+
+        getStates().then();
+        getUsers().then();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -73,11 +101,12 @@ function NewTack() {
                         of the Republic</label>
                     <select id="state_id" name='state_id'
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Choose a country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="FR">France</option>
-                        <option value="DE">Germany</option>
+
+                        {states.data?.map((row) => (
+                            <option key={row.id} value={row.id}>
+                                {row.abbreviation} {row.name}
+                            </option>
+                        ))}
                     </select>
 
 
@@ -85,7 +114,11 @@ function NewTack() {
                         of the creator</label>
                     <select id="user_id" name='user_id'
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Choose a country</option>
+                        {users.data?.map((row) => (
+                            <option key={row.id} value={row.id}>
+                                {row.name}
+                            </option>
+                        ))}
 
                     </select>
 
