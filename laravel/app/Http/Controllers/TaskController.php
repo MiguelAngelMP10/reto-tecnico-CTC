@@ -22,9 +22,19 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTaskRequest $request)
+    public function store(StoreTaskRequest $request): JsonResponse
     {
-        return response()->json($request->all());
+        $task = new Task([
+            "title" => $request->input('title'),
+            "description" => $request->input('description'),
+            "created_at" => $request->input('created_at'),
+            "state_id" => $request->input('state_id'),
+            "user_id" => $request->input('user_id'),
+        ]);
+        $task->save();
+
+        return response()->json(['message' => 'Task created successfully.', 'task' => $task], 201);
+
     }
 
     /**
@@ -34,7 +44,7 @@ class TaskController extends Controller
     {
         //
     }
-    
+
 
     /**
      * Update the specified resource in storage.

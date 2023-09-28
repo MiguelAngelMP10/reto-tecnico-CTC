@@ -1,12 +1,10 @@
 "use client";
 import React, {useEffect, useState} from 'react';
 import Menu from "@/app/components/Menu";
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function NewTack() {
-    const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-    });
     const [states, setStates] = useState({})
     const [users, setUsers] = useState({})
 
@@ -48,19 +46,30 @@ function NewTack() {
 
         let body = JSON.stringify(formObject);
 
-        const response = await fetch('http://127.0.0.1:8000/api/tasks', {
-            method: 'POST',
-            body,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+        try {
+
+            const response = await fetch('http://127.0.0.1:8000/api/tasks', {
+                method: 'POST',
+                body,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            toast.success(data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                className: 'foo-bar'
+            });
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
 
     };
 
     return (
         <>
             <Menu></Menu>
+            <ToastContainer/>
             <div className="flex flex-col items-center">
 
                 <h1 className='text-4xl font-bold text-blue-500 text-center ali'>Add new tack</h1>
@@ -125,7 +134,7 @@ function NewTack() {
 
                     <button type="submit"
                             className="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register
-                        new account
+                        new tack
                     </button>
                 </form>
             </div>
