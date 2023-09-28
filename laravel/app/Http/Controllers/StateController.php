@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStateRequest;
 use App\Http\Requests\UpdateStateRequest;
+use App\Http\Resources\StateCollection;
 use App\Models\State;
 
 class StateController extends Controller
@@ -11,9 +12,9 @@ class StateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): StateCollection
     {
-
+        return new StateCollection(State::all());
     }
 
     /**
